@@ -1,0 +1,134 @@
+package main;
+
+import java.util.List;
+import java.util.Scanner;
+
+import entidades.PersonagemAbstrato;
+import factory.PersonagemFactory;
+import util.ArquivoUtil;
+import util.TratarErros;
+
+public class Jogo {
+	
+	private PersonagemAbstrato personagemSelecionado; //guarda o personagem atual
+	
+	public void menuInicial(Scanner input) {
+		int opcao;
+		do{
+			System.out.println("\n====== 「 ⚔️ MENU RPG ⚔️ 」 ======");
+			System.out.println(".✦ [1] Personagens ");
+			System.out.println(".✦ [2] Escolher Ataque ");
+			System.out.println(".✦ [3] Equipar Armadura ");
+			System.out.println(".✦ [4] Iniciar Combate ");
+			System.out.println(".✦ [0] Sair ");
+			
+			// Usa a função da classe TratarErros para ler a opção do usuário com segurança
+			opcao = TratarErros.LerOpcaoInteira(input, "🎲 Sua opção: ");
+			
+			switch (opcao) {
+			case 1:
+				menuPersonagem(input);
+                break;
+            case 2:
+                System.out.println("➡ Selecionar personagem...");
+                // carregar de ArquivoUtil
+                break;
+            case 3:
+                System.out.println("➡ Escolher ataque...");
+                // aplicar Strategy
+                break;
+            case 4:
+                System.out.println("➡ Equipar armadura...");
+                // aplicar Decorator
+                break;
+            case 5:
+                System.out.println("➡ Iniciando combate...");
+                // lógica do combate
+                break;
+            case 0:
+                System.out.println("Saindo do jogo...");
+                break;
+            default:
+                System.out.println("❌ Opção inválida!");
+        }
+		
+		} while (opcao != 0);
+	}
+	
+	private void menuPersonagem(Scanner input) {
+		int opcao;
+		do {
+			System.out.println("\n====== 「 👤 MENU PERSONAGEM  」 ======");
+			System.out.println(".✦ [1] Criar Personagem ");
+			System.out.println(".✦ [2] Selecionar Personagem ");
+			System.out.println(".✦ [3] Listar Personagens ");
+			System.out.println(".✦ [0] Voltar ");
+			
+			opcao = TratarErros.LerOpcaoInteira(input, "🎲 Sua opção: ");
+			
+			switch (opcao) {
+				case 1:
+					criarPersonagem(input);
+					break;
+                
+				case 2:
+					selecionarPersonagem(input);
+					break;
+				
+				case 3:
+					System.out.println("\n•┈๑⋅⋯ 📜 Lista de personagens: ⋯⋅๑┈•");
+                    ArquivoUtil.listarPersonagens();
+                    break;
+                
+				case 0:
+					System.out.println("↩ Voltando ao menu principal...");
+					break;
+					
+				default:
+					System.out.println("❌ Opção inválida!");
+			}
+			
+		} while(opcao != 0);
+	}
+	
+	private void criarPersonagem(Scanner input) {
+		String nome = TratarErros.LerOpcaoString(input, "\n•┈๑⋅⋯Nome do personagem: ");
+		String classe = TratarErros.LerOpcaoString(input, "•┈๑⋅⋯ Classes Disponiveís ⋯⋅๑┈•"
+				+ "\n🧙🏻‍♂ Mago"
+				+ "\n⚔️ Guerreiro"
+				+ "\n•┈๑⋅⋯Nome da classe: ");
+		
+		PersonagemAbstrato novo = PersonagemFactory.criarPersonagem(classe, nome);
+
+        if (novo != null) {
+        	ArquivoUtil.salvarPersonagem(novo);
+            System.out.println("\n✔ Personagem criado com sucesso!");
+            novo.exibirStatus();
+        }
+		
+	}
+	
+	 private void selecionarPersonagem(Scanner input) {
+	        List<PersonagemAbstrato> personagens = ArquivoUtil.carregarPersonagens();
+	        if (personagens.isEmpty()) {
+	            System.out.println("❌ Nenhum personagem disponível para seleção.");
+	            return;
+	        }
+
+	        System.out.println("\n•┈๑⋅⋯ 📜 Personagens disponíveis: ⋯⋅๑┈•");
+	        for (int i = 0; i < personagens.size(); i++) {
+	            System.out.println((i + 1) + " - " + personagens.get(i).getNome() + " (" + personagens.get(i).getClasse() + ")");
+	        }
+	        
+	        // Escolher o personagem pelo índice da lista
+	        int escolha = TratarErros.LerOpcaoInteira(input, "Escolha o número do personagem: ") - 1;
+
+	        if (escolha >= 0 && escolha < personagens.size()) {
+	            personagemSelecionado = personagens.get(escolha);
+	            System.out.println("✔ " + personagemSelecionado.getNome() + " selecionado com sucesso!");
+	            personagemSelecionado.exibirStatus(); //exibe o statutus "automatico"
+	        } else {
+	            System.out.println("❌ Escolha inválida.");
+	        }
+	    }
+}
