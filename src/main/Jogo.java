@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 import entidades.PersonagemAbstrato;
 import factory.PersonagemFactory;
+import strategy.AtaqueFisico;
+import strategy.AtaqueMagico;
 import util.ArquivoUtil;
 import util.TratarErros;
 
@@ -16,8 +18,8 @@ public class Jogo {
 		int opcao;
 		do{
 			System.out.println("\n====== 「 ⚔️ MENU RPG ⚔️ 」 ======");
-			System.out.println(".✦ [1] Personagens ");
-			System.out.println(".✦ [2] Escolher Ataque ");
+			System.out.println(".✦ [1] Menu Personagens ");
+			System.out.println(".✦ [2] Menu Ataques ");
 			System.out.println(".✦ [3] Equipar Armadura ");
 			System.out.println(".✦ [4] Iniciar Combate ");
 			System.out.println(".✦ [0] Sair ");
@@ -27,11 +29,14 @@ public class Jogo {
 			
 			switch (opcao) {
 			case 1:
-				menuPersonagem(input);
+				menuPersonagem(input); //factory
                 break;
             case 2:
-                System.out.println("➡ Selecionar personagem...");
-                // carregar de ArquivoUtil
+            	if (personagemSelecionado == null) {
+            		System.out.println("❌ Selecione um personagem (Menu Personagem) antes de escolher um ataque!");
+            	} else {
+            		menuAtaque(input); //Strategy
+            	}
                 break;
             case 3:
                 System.out.println("➡ Escolher ataque...");
@@ -55,6 +60,7 @@ public class Jogo {
 		} while (opcao != 0);
 	}
 	
+	//menu personagem
 	private void menuPersonagem(Scanner input) {
 		int opcao;
 		do {
@@ -108,27 +114,59 @@ public class Jogo {
 		
 	}
 	
-	 private void selecionarPersonagem(Scanner input) {
-	        List<PersonagemAbstrato> personagens = ArquivoUtil.carregarPersonagens();
-	        if (personagens.isEmpty()) {
-	            System.out.println("❌ Nenhum personagem disponível para seleção.");
-	            return;
-	        }
-
-	        System.out.println("\n•┈๑⋅⋯ 📜 Personagens disponíveis: ⋯⋅๑┈•");
-	        for (int i = 0; i < personagens.size(); i++) {
-	            System.out.println((i + 1) + " - " + personagens.get(i).getNome() + " (" + personagens.get(i).getClasse() + ")");
-	        }
-	        
-	        // Escolher o personagem pelo índice da lista
-	        int escolha = TratarErros.LerOpcaoInteira(input, "Escolha o número do personagem: ") - 1;
-
-	        if (escolha >= 0 && escolha < personagens.size()) {
-	            personagemSelecionado = personagens.get(escolha);
-	            System.out.println("✔ " + personagemSelecionado.getNome() + " selecionado com sucesso!");
-	            personagemSelecionado.exibirStatus(); //exibe o statutus "automatico"
-	        } else {
-	            System.out.println("❌ Escolha inválida.");
-	        }
+	private void selecionarPersonagem(Scanner input) {
+		List<PersonagemAbstrato> personagens = ArquivoUtil.carregarPersonagens();
+		if (personagens.isEmpty()) {
+	    	System.out.println("❌ Nenhum personagem disponível para seleção.");
+	    	return;
 	    }
+
+	    System.out.println("\n•┈๑⋅⋯ 📜 Personagens disponíveis: ⋯⋅๑┈•");
+	    for (int i = 0; i < personagens.size(); i++) {
+	    	System.out.println((i + 1) + " - " + personagens.get(i).getNome() + " (" + personagens.get(i).getClasse() + ")");
+	    }
+	        
+	    // Escolher o personagem pelo índice da lista
+	    int escolha = TratarErros.LerOpcaoInteira(input, "Escolha o número do personagem: ") - 1;
+
+	    if (escolha >= 0 && escolha < personagens.size()) {
+	    	personagemSelecionado = personagens.get(escolha);
+	        System.out.println("✔ " + personagemSelecionado.getNome() + " selecionado com sucesso!");
+	        personagemSelecionado.exibirStatus(); //exibe o statutus "automatico"
+	    } else {
+	    	System.out.println("❌ Escolha inválida.");
+	    }
+	}
+
+	//menu ataque
+	private void menuAtaque(Scanner input) {
+		int opcao;
+		do {
+			System.out.println("\n====== 「 💥 MENU ATAQUE  」 ======");
+			System.out.println(".✦ [1] Ataque Físico ");
+			System.out.println(".✦ [2] Ataque Mágico ");
+			System.out.println(".✦ [0] Voltar ");
+			
+			opcao = TratarErros.LerOpcaoInteira(input, "🎲 Sua opção: ");
+			
+			switch (opcao) {
+				case 1:
+					personagemSelecionado.setEstrategiaAtaque(new AtaqueFisico());
+					System.out.println("💪 Ataque físico selecionado!");
+					break;
+					
+				case 2:
+					personagemSelecionado.setEstrategiaAtaque(new AtaqueMagico());
+					System.out.println("🔮 Ataque mágico selecionado!");
+					break;
+					
+				case 0:
+					System.out.println("↩ Voltando ao menu principal...");
+					break;
+					
+				default:
+					System.out.println("❌ Tipo de ataque inválido!");
+			}
+		} while (opcao != 0);
+	}
 }
