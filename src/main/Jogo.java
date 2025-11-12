@@ -39,16 +39,15 @@ public class Jogo {
             	}
                 break;
             case 3:
-                System.out.println("➡ Escolher ataque...");
-                // aplicar Strategy
-                break;
-            case 4:
                 System.out.println("➡ Equipar armadura...");
                 // aplicar Decorator
                 break;
-            case 5:
-                System.out.println("➡ Iniciando combate...");
-                // lógica do combate
+            case 4:
+                if (personagemSelecionado == null) {
+                	System.out.println("❌ Selecione um personagem (Menu Personagem) antes de iniciar um combate!");
+                } else {
+                	Combate.iniciar(personagemSelecionado);
+                }
                 break;
             case 0:
                 System.out.println("Saindo do jogo...");

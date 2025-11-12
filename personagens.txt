@@ -1,3 +1,5 @@
 Milly;Mago
 Aladin;Guerreiro
 Lusca;Guerreiro
+Denini;Guerreiro
+Toin;Mago

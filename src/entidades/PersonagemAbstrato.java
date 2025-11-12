@@ -37,10 +37,6 @@ public abstract class PersonagemAbstrato {
         System.out.println("❤️ Vida: " + vida);
         System.out.println("🗡️ Ataque: " + ataque);
         System.out.println("🛡️ Defesa: " + defesa);
-        /*System.out.println("Nome: " + nome);
-        System.out.println("Classe: " + classe);
-        System.out.println("Vida: " + vida);
-        System.out.println("Ataque: " + ataque);*/
         System.out.println("•┈๑⋅⋯⋅⋯⋅⋯⋅⋯⋅⋅⋯⋅⋯⋯⋅⋯⋅⋯⋅⋯⋯⋅๑┈•");
     }
 	
@@ -67,5 +63,9 @@ public abstract class PersonagemAbstrato {
     
     public void setVida(int vida) {
     	this.vida = vida;
+    }
+    
+    public AtaqueStrategy getEstrategiaAtaque() {
+    	return estrategiaAtaque;
     }
 }
