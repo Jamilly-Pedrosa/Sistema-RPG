@@ -3,6 +3,8 @@ package main;
 import java.util.List;
 import java.util.Scanner;
 
+import decorator.ArmaduraDecorator;
+import decorator.PocaoVida;
 import entidades.PersonagemAbstrato;
 import factory.PersonagemFactory;
 import strategy.AtaqueFisico;
@@ -20,7 +22,7 @@ public class Jogo {
 			System.out.println("\n====== 「 ⚔️ MENU RPG ⚔️ 」 ======");
 			System.out.println(".✦ [1] Menu Personagens ");
 			System.out.println(".✦ [2] Menu Ataques ");
-			System.out.println(".✦ [3] Equipar Armadura ");
+			System.out.println(".✦ [3] Menu Melhorias ");
 			System.out.println(".✦ [4] Iniciar Combate ");
 			System.out.println(".✦ [0] Sair ");
 			
@@ -39,8 +41,11 @@ public class Jogo {
             	}
                 break;
             case 3:
-                System.out.println("➡ Equipar armadura...");
-                // aplicar Decorator
+            	if (personagemSelecionado == null) {
+            		System.out.println("❌ Selecione um personagem (Menu Personagem) antes de escolher um ataque!");
+            	} else {
+            		menuDecorator(input); //Decorator
+            	}
                 break;
             case 4:
                 if (personagemSelecionado == null) {
@@ -168,4 +173,39 @@ public class Jogo {
 			}
 		} while (opcao != 0);
 	}
+	
+	//menu decorator
+	private void menuDecorator(Scanner input) {
+		int opcao;
+		do {
+			System.out.println("\n====== 「 ☘︎ MENU MELHORIAS  」 ======");
+			System.out.println(".✦ [1] Equipar Armadura (+ 10 🛡️)");
+			System.out.println(".✦ [2] Poção de Vida (+ 10 ❤️)");
+			System.out.println(".✦ [0] Voltar ");
+			
+			opcao = TratarErros.LerOpcaoInteira(input, "🎲 Sua opção: ");
+			
+			switch (opcao) {
+			case 1:
+				personagemSelecionado = new ArmaduraDecorator(personagemSelecionado);
+				System.out.println("🛡️ Armadura equipada! Defesa atual: " + personagemSelecionado.getDefesa());
+				break;
+				
+			case 2:
+				personagemSelecionado = new PocaoVida(personagemSelecionado);
+				System.out.println("❤️ Poção de vida usada! Vida atual: " + personagemSelecionado.getVida());		
+				break;
+				
+			case 0:
+				System.out.println("↩ Voltando ao menu principal...");
+				break;
+				
+			default:
+				System.out.println("❌ Opção inválida!");
+			
+			}
+			
+		} while (opcao != 0);
+	}
+
 }
