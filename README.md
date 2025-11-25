@@ -25,6 +25,7 @@ Centraliza a lógica de criação dos personagens, facilitando a manutenção e 
 - `PersonagemFactory`
 - `Guerreiro.java`
 - `Mago.java`
+- `Inimigo.java`
 
 ### **🎯 Strategy – Tipos de Ataque**
 Permite alterar dinamicamente o ataque do personagem durante a execução.
